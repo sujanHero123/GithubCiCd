@@ -2,27 +2,29 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 
-# Configure Chrome options for headless CI run
+# Chrome options for headless execution (good for CI)
 options = Options()
-options.add_argument("--headless")  # Run in headless mode
-options.add_argument("--no-sandbox")  # Needed for CI
-options.add_argument("--disable-dev-shm-usage")  # Prevent crashes in CI
+options.add_argument("--headless")
+options.add_argument("--no-sandbox")
+options.add_argument("--disable-dev-shm-usage")
 
-# Setup WebDriver using WebDriverManager
+# Set up Chrome driver
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
-# Open Google and perform a search
-driver.get("https://www.google.com")
-search_box = driver.find_element(By.NAME, "q")
-search_box.send_keys("https://en.wikipedia.org/wiki/Nepal")
-search_box.send_keys(Keys.RETURN)
+# Navigate directly to Wikipedia's Nepal page
+driver.get("https://en.wikipedia.org/wiki/Nepal")
 
+# Wait for the page to fully load
 time.sleep(2)
-element = driver.find_element(by=By.CSS_SELECTOR, value="#mw-content-text > div.mw-content-ltr.mw-parser-output > p:nth-child(8)")
-print(element.text)
+
+# Extract the 8th paragraph in the content
+try:
+    element = driver.find_element(By.CSS_SELECTOR, "#mw-content-text > div.mw-content-ltr.mw-parser-output > p:nth-child(8)")
+    print("Extracted Paragraph:\n", element.text)
+except Exception as e:
+    print("Failed to extract paragraph:", e)
 
 driver.quit()
