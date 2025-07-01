@@ -18,10 +18,10 @@ driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), opti
 # Open Google and perform a search
 driver.get("https://www.google.com")
 search_box = driver.find_element(By.NAME, "q")
-search_box.send_keys("GitHub Actions with Selenium and WebDriverManager")
+search_box.send_keys("https://en.wikipedia.org/wiki/Nepal")
 search_box.send_keys(Keys.RETURN)
 
 time.sleep(2)
-print("Title:", driver.title)
+print(driver.find-element("#mw-content-text > div.mw-content-ltr.mw-parser-output > p:nth-child(8)").text)
 
 driver.quit()
