@@ -4,10 +4,9 @@ on:
   push:
     branches: [ main ]
   pull_request:
-  workflow_dispatch:
 
 jobs:
-  test:
+  selenium-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,11 +18,10 @@ jobs:
         with:
           python-version: 3.11
 
-      - name: Cache pip packages
+      - name: Cache pip dependencies
         uses: actions/cache@v4
         with:
-          path: |
-            ~/.cache/pip
+          path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
@@ -33,22 +31,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Cache chromedriver
-        id: cache-chromedriver
-        uses: actions/cache@v4
-        with:
-          path: ~/drivers/chromedriver
-          key: chromedriver-${{ runner.os }}-v1
-
-      - name: Download latest Chromedriver
+      - name: Download latest ChromeDriver
         run: |
+          mkdir -p ~/drivers/chromedriver
           LATEST=$(curl -sSL https://chromedriver.storage.googleapis.com/LATEST_RELEASE)
           wget https://chromedriver.storage.googleapis.com/${LATEST}/chromedriver_linux64.zip -O chromedriver.zip
           unzip chromedriver.zip -d ~/drivers/chromedriver
           chmod +x ~/drivers/chromedriver/chromedriver
           echo "$HOME/drivers/chromedriver" >> $GITHUB_PATH
 
-
-      - name: Run Selenium Test
+      - name: Run Selenium script
         run: |
           python script.py
