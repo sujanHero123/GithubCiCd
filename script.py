@@ -22,6 +22,7 @@ search_box.send_keys("https://en.wikipedia.org/wiki/Nepal")
 search_box.send_keys(Keys.RETURN)
 
 time.sleep(2)
-print(driver.find-element("#mw-content-text > div.mw-content-ltr.mw-parser-output > p:nth-child(8)").text)
+element = driver.find_element(by=By.CSS_SELECTOR, value="#mw-content-text > div.mw-content-ltr.mw-parser-output > p:nth-child(8)")
+print(element.text)
 
 driver.quit()
