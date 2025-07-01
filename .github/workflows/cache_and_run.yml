@@ -40,14 +40,14 @@ jobs:
           path: ~/drivers/chromedriver
           key: chromedriver-${{ runner.os }}-v1
 
-      - name: Setup Chrome & Chromedriver
-        if: steps.cache-chromedriver.outputs.cache-hit != 'true'
+      - name: Download latest Chromedriver
         run: |
-          mkdir -p ~/drivers/chromedriver
-          wget -q https://chromedriver.storage.googleapis.com/124.0.6367.91/chromedriver_linux64.zip
-          unzip chromedriver_linux64.zip -d ~/drivers/chromedriver
+          LATEST=$(curl -sSL https://chromedriver.storage.googleapis.com/LATEST_RELEASE)
+          wget https://chromedriver.storage.googleapis.com/${LATEST}/chromedriver_linux64.zip -O chromedriver.zip
+          unzip chromedriver.zip -d ~/drivers/chromedriver
           chmod +x ~/drivers/chromedriver/chromedriver
-          echo "export PATH=$HOME/drivers/chromedriver:$PATH" >> $GITHUB_ENV
+          echo "$HOME/drivers/chromedriver" >> $GITHUB_PATH
+
 
       - name: Run Selenium Test
         run: |
